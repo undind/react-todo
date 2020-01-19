@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { List } from "./components";
+import { List, AddList } from "./components";
 
-import axios from './request';
+import axios from "./request";
 
 const App = () => {
-
   const [ lists, setLists ] = useState([]);
+  const [ colors, setColors ] = useState([]);
 
   useEffect(() => {
-    axios.get('/lists?_expand=color&_embed=tasks').then(({ data }) => {
-      setLists(data)
-    })
-  }, [])
-
+    axios.get("/lists?_expand=color&_embed=tasks").then(({ data }) => {
+      setLists(data);
+    });
+    axios.get("/colors").then(({ data }) => {
+      setColors(data);
+    });
+  }, []);
+  console.log(colors)
   return (
     <div className="todo">
       <div className="todo__sidebar">
@@ -37,10 +40,8 @@ const App = () => {
             }
           ]}
         />
-
-        <List 
-          items={lists}
-        />
+        {lists.length ? <List items={lists} /> : "Loading..."}
+        <AddList colors={colors} />
       </div>
     </div>
   );
