@@ -1,7 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { List } from "./components";
 
+import axios from './request';
+
 const App = () => {
+
+  const [ lists, setLists ] = useState([]);
+
+  useEffect(() => {
+    axios.get('/lists?_expand=color&_embed=tasks').then(({ data }) => {
+      setLists(data)
+    })
+  }, [])
+
   return (
     <div className="todo">
       <div className="todo__sidebar">
@@ -25,6 +36,10 @@ const App = () => {
               name: "Все задачи"
             }
           ]}
+        />
+
+        <List 
+          items={lists}
         />
       </div>
     </div>
